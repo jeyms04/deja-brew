@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Deja Brew | Products</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- MOBILE OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">☕</div>
+
+            <div>
+                <h2>Deja Brew</h2>
+                <span>Inventory System</span>
+            </div>
+        </div>
+
+        <nav class="navigation">
+
+            <a href="dashboard.html" class="nav-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="products.html" class="nav-item active">
+                <span>📦</span>
+                <span>Products</span>
+            </a>
+
+            <a href="categories.html" class="nav-item">
+                <span>🗂️</span>
+                <span>Categories</span>
+            </a>
+
+            <a href="stock-in.html" class="nav-item">
+                <span>📥</span>
+                <span>Stock In</span>
+            </a>
+
+            <a href="stock-out.html" class="nav-item">
+                <span>📤</span>
+                <span>Stock Out</span>
+            </a>
+
+            <a href="suppliers.html" class="nav-item">
+                <span>🚚</span>
+                <span>Suppliers</span>
+            </a>
+
+            <a href="reports.html" class="nav-item">
+                <span>📊</span>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item">
+                <span>⚙️</span>
+                <span>Profile</span>
+            </a>
+
+            <button id="logoutBtn" class="logout-btn">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <button class="menu-btn" id="menuBtn">
+                ☰
+            </button>
+
+            <div class="topbar-title">
+
+                <h1>Products</h1>
+
+                <p>
+                    Manage your Deja Brew inventory
+                </p>
+
+            </div>
+
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <strong id="userName">
+                        Loading...
+                    </strong>
+
+                    <small id="userRole">
+                        User
+                    </small>
+
+                </div>
+
+                <div class="user-avatar">
+                    👤
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PRODUCTS CONTENT -->
+        <section class="dashboard-content">
+
+
+            <!-- PAGE HEADER -->
+            <div class="products-page-header">
+
+                <div>
+
+                    <h2>
+                        Product Inventory
+                    </h2>
+
+                    <p>
+                        Add, edit, search and manage your products.
+                    </p>
+
+                </div>
+
+                <button
+                    class="primary-btn"
+                    id="addProductBtn"
+                >
+                    + Add Product
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH -->
+            <div class="products-toolbar">
+
+                <div class="search-box">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="searchProduct"
+                        placeholder="Search products..."
+                    >
+
+                </div>
+
+                <div class="product-count">
+
+                    <span id="productCount">
+                        0 products
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- PRODUCTS TABLE -->
+            <div class="section-card products-card">
+
+                <div class="table-wrapper">
+
+                    <table class="products-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Product</th>
+
+                                <th>SKU</th>
+
+                                <th>Category</th>
+
+                                <th>Price</th>
+
+                                <th>Stock</th>
+
+                                <th>Status</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="productsTable">
+
+                            <tr>
+
+                                <td
+                                    colspan="7"
+                                    class="empty-table"
+                                >
+                                    Loading products...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+    </main>
+
+
+    <!-- PRODUCT MODAL -->
+    <div
+        class="modal-overlay"
+        id="productModal"
+    >
+
+        <div class="product-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2 id="modalTitle">
+                        Add Product
+                    </h2>
+
+                    <p>
+                        Enter product information
+                    </p>
+
+                </div>
+
+                <button
+                    class="modal-close"
+                    id="closeModal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="productForm">
+
+                <input
+                    type="hidden"
+                    id="productId"
+                >
+
+
+                <div class="form-grid">
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Product Name
+                        </label>
+
+                        <input
+                            type="text"
+                            id="productName"
+                            placeholder="e.g. Iced Latte"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            SKU
+                        </label>
+
+                        <input
+                            type="text"
+                            id="productSKU"
+                            placeholder="e.g. DB-001"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Category
+                        </label>
+
+                        <input
+                            type="text"
+                            id="productCategory"
+                            placeholder="e.g. Coffee"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Price
+                        </label>
+
+                        <input
+                            type="number"
+                            id="productPrice"
+                            placeholder="0.00"
+                            min="0"
+                            step="0.01"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Current Stock
+                        </label>
+
+                        <input
+                            type="number"
+                            id="productStock"
+                            placeholder="0"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Minimum Stock
+                        </label>
+
+                        <input
+                            type="number"
+                            id="productMinStock"
+                            placeholder="5"
+                            min="0"
+                            required
+                        >
+
+                    </div>
+
+
+                </div>
+
+
+                <div
+                    id="productMessage"
+                    class="form-message"
+                ></div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelProduct"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        Save Product
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script
+        type="module"
+        src="js/products.js"
+    ></script>
+
+</body>
+
+</html>

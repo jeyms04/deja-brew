@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Deja Brew | Categories</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- MOBILE OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+
+            <div class="brand-icon">
+                ☕
+            </div>
+
+            <div>
+                <h2>Deja Brew</h2>
+                <span>Inventory System</span>
+            </div>
+
+        </div>
+
+
+        <nav class="navigation">
+
+            <a href="dashboard.html" class="nav-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="products.html" class="nav-item">
+                <span>📦</span>
+                <span>Products</span>
+            </a>
+
+            <a href="categories.html" class="nav-item active">
+                <span>🗂️</span>
+                <span>Categories</span>
+            </a>
+
+            <a href="stock-in.html" class="nav-item">
+                <span>📥</span>
+                <span>Stock In</span>
+            </a>
+
+            <a href="stock-out.html" class="nav-item">
+                <span>📤</span>
+                <span>Stock Out</span>
+            </a>
+
+            <a href="suppliers.html" class="nav-item">
+                <span>🚚</span>
+                <span>Suppliers</span>
+            </a>
+
+            <a href="reports.html" class="nav-item">
+                <span>📊</span>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+            <a href="#" class="nav-item">
+                <span>⚙️</span>
+                <span>Profile</span>
+            </a>
+
+            <button id="logoutBtn" class="logout-btn">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <button class="menu-btn" id="menuBtn">
+                ☰
+            </button>
+
+
+            <div class="topbar-title">
+
+                <h1>Categories</h1>
+
+                <p>
+                    Organize your Deja Brew products
+                </p>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <strong id="userName">
+                        Loading...
+                    </strong>
+
+                    <small id="userRole">
+                        User
+                    </small>
+
+                </div>
+
+
+                <div class="user-avatar">
+                    👤
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- CONTENT -->
+        <section class="dashboard-content">
+
+
+            <!-- PAGE HEADER -->
+            <div class="products-page-header">
+
+                <div>
+
+                    <h2>
+                        Category Management
+                    </h2>
+
+                    <p>
+                        Create and manage product categories.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    id="addCategoryBtn"
+                >
+                    + Add Category
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH -->
+            <div class="products-toolbar">
+
+                <div class="search-box">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="searchCategory"
+                        placeholder="Search categories..."
+                    >
+
+                </div>
+
+
+                <div class="product-count">
+
+                    <span id="categoryCount">
+                        0 categories
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- CATEGORY TABLE -->
+            <div class="section-card products-card">
+
+                <div class="table-wrapper">
+
+                    <table class="products-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Category</th>
+
+                                <th>Description</th>
+
+                                <th>Products</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="categoriesTable">
+
+                            <tr>
+
+                                <td
+                                    colspan="4"
+                                    class="empty-table"
+                                >
+                                    Loading categories...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- CATEGORY MODAL -->
+    <div
+        class="modal-overlay"
+        id="categoryModal"
+    >
+
+        <div class="product-modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <h2 id="categoryModalTitle">
+                        Add Category
+                    </h2>
+
+                    <p>
+                        Enter category information
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="modal-close"
+                    id="closeCategoryModal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="categoryForm">
+
+                <input
+                    type="hidden"
+                    id="categoryId"
+                >
+
+
+                <div class="form-group">
+
+                    <label>
+                        Category Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="categoryName"
+                        placeholder="e.g. Coffee"
+                        required
+                    >
+
+                </div>
+
+
+                <div
+                    class="form-group"
+                    style="margin-top: 18px;"
+                >
+
+                    <label>
+                        Description
+                    </label>
+
+                    <input
+                        type="text"
+                        id="categoryDescription"
+                        placeholder="e.g. Coffee-based beverages"
+                    >
+
+                </div>
+
+
+                <div
+                    id="categoryMessage"
+                    class="form-message"
+                ></div>
+
+
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelCategory"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                    >
+                        Save Category
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script
+        type="module"
+        src="js/categories.js"
+    ></script>
+
+</body>
+
+</html>
