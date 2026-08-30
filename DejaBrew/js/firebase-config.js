@@ -3,7 +3,7 @@ import { getAuth } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-aut
 import { getFirestore } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDIKuTEu-AA43FJzXcsppbM19vkBvoaNDI",
+    apiKey: "AIzaSyAfCshpwQ7y0j3zRejwEgMbrIEQvxmTKkk",
     authDomain: "deja-brew-inventory-system.firebaseapp.com",
     projectId: "deja-brew-inventory-system",
     storageBucket: "deja-brew-inventory-system.firebasestorage.app",
