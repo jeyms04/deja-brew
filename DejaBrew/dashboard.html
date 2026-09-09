@@ -11,6 +11,8 @@
 
     <title>Deja Brew | Dashboard</title>
 
+    <link rel="icon" type="image/png" href="images/dejabrew.png">
+
     <link
         rel="stylesheet"
         href="css/style.css"
@@ -35,12 +37,11 @@
         <div class="brand">
 
             <div class="brand-icon">
-                ☕
-            </div>
-
-            <div>
-                <h2>Deja Brew</h2>
-                <span>Inventory System</span>
+                <img
+                    src="images/deja-brew-logo.jpeg"
+                    alt="Deja Brew Logo"
+                    class="brand-logo"
+                >
             </div>
 
         </div>
@@ -109,14 +110,6 @@
 
         <div class="sidebar-bottom">
 
-            <a
-                href="#"
-                class="nav-item"
-            >
-                <span>⚙️</span>
-                <span>Profile</span>
-            </a>
-
             <button
                 id="logoutBtn"
                 class="logout-btn"
@@ -183,7 +176,6 @@
 
             <!-- SUMMARY CARDS -->
             <div class="dashboard-cards">
-
 
                 <div class="stat-card">
 
@@ -263,17 +255,52 @@
             </div>
 
 
+
+            <!-- QUICK ACTIONS -->
+            <div class="quick-actions">
+
+                <a href="products.html" class="quick-action">
+                    <div class="quick-action-icon">📦</div>
+                    <div>
+                        <strong>Manage Products</strong>
+                        <small>Add or update products</small>
+                    </div>
+                </a>
+
+                <a href="stock-in.html" class="quick-action">
+                    <div class="quick-action-icon">📥</div>
+                    <div>
+                        <strong>Stock In</strong>
+                        <small>Record incoming stock</small>
+                    </div>
+                </a>
+
+                <a href="stock-out.html" class="quick-action">
+                    <div class="quick-action-icon">📤</div>
+                    <div>
+                        <strong>Stock Out</strong>
+                        <small>Record outgoing stock</small>
+                    </div>
+                </a>
+
+                <a href="reports.html" class="quick-action">
+                    <div class="quick-action-icon">📊</div>
+                    <div>
+                        <strong>View Reports</strong>
+                        <small>Check inventory activity</small>
+                    </div>
+                </a>
+
+            </div>
+
             <!-- WELCOME CARD -->
             <div class="welcome-card">
 
                 <div>
 
-                    <span class="welcome-label">
-                        DEJA BREW INVENTORY
-                    </span>
-
+                    <div class="welcome-label">DEJA BREW INVENTORY</div>
                     <h2>
-                        Manage your coffee shop inventory with ease.
+                        Your coffee shop, organized beautifully.
                     </h2>
 
                     <p>
@@ -298,7 +325,7 @@
                     <div>
 
                         <h2>
-                            Recent Transactions
+                            Recent Stock Movements
                         </h2>
 
                         <p>
