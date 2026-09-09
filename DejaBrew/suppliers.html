@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Suppliers - Deja Brew</title>
+
+    <link rel="icon" type="image/png" href="images/dejabrew.png">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dashboard-body">
+
+    <!-- MOBILE SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+        <!-- LOGO -->
+        <div class="brand">
+            <div class="brand-icon">
+                <img
+                    src="images/deja-brew-logo.jpeg"
+                    alt="Deja Brew Logo"
+                    class="brand-logo"
+                >
+            </div>
+        </div>
+
+
+        <!-- NAVIGATION -->
+        <nav class="navigation">
+
+            <a href="dashboard.html" class="nav-item">
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="products.html" class="nav-item">
+                <span>📦</span>
+                <span>Products</span>
+            </a>
+
+            <a href="categories.html" class="nav-item">
+                <span>📁</span>
+                <span>Categories</span>
+            </a>
+
+            <a href="stock-in.html" class="nav-item">
+                <span>📥</span>
+                <span>Stock In</span>
+            </a>
+
+            <a href="stock-out.html" class="nav-item">
+                <span>📤</span>
+                <span>Stock Out</span>
+            </a>
+
+            <a href="suppliers.html" class="nav-item active">
+                <span>🚚</span>
+                <span>Suppliers</span>
+            </a>
+
+            <a href="reports.html" class="nav-item">
+                <span>📊</span>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="sidebar-bottom">
+
+            <button id="logoutBtn" class="logout-btn">
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+                type="button"
+            >
+                ☰
+            </button>
+
+            <div class="topbar-title">
+
+                <h1>Suppliers</h1>
+
+                <p>
+                    Manage your product suppliers
+                </p>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <strong id="userName">
+                        Loading...
+                    </strong>
+
+                    <small id="userRole">
+                        User
+                    </small>
+
+                </div>
+
+                <div class="user-avatar">
+                    👤
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <section class="dashboard-content">
+
+
+            <!-- PAGE HEADER -->
+            <div class="products-page-header">
+
+                <div>
+
+                    <h2>
+                        Supplier Management
+                    </h2>
+
+                    <p>
+                        Add and manage your coffee shop suppliers.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    id="openSupplierBtn"
+                    type="button"
+                >
+                    + Add Supplier
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH TOOLBAR -->
+            <div class="products-toolbar">
+
+                <div class="search-box">
+
+                    <span>🔍</span>
+
+                    <input
+                        type="text"
+                        id="searchSupplier"
+                        placeholder="Search suppliers..."
+                    >
+
+                </div>
+
+
+                <div class="product-count">
+
+                    <span id="supplierCount">
+                        0 suppliers
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- SUPPLIERS TABLE -->
+            <div class="section-card products-card">
+
+                <div class="table-wrapper">
+
+                    <table class="products-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>SUPPLIER</th>
+
+                                <th>CONTACT PERSON</th>
+
+                                <th>PHONE</th>
+
+                                <th>EMAIL</th>
+
+                                <th>ADDRESS</th>
+
+                                <th>ACTIONS</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="supplierTable">
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-table"
+                                >
+                                    Loading suppliers...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ADD / EDIT SUPPLIER MODAL -->
+    <div
+        class="modal-overlay"
+        id="supplierModal"
+    >
+
+        <div class="product-modal">
+
+
+            <!-- MODAL HEADER -->
+            <div class="modal-header">
+
+                <div>
+
+                    <h2 id="supplierModalTitle">
+                        Add Supplier
+                    </h2>
+
+                    <p>
+                        Enter supplier information
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="closeSupplierBtn"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- SUPPLIER FORM -->
+            <form id="supplierForm">
+
+
+                <!-- SUPPLIER NAME -->
+                <div class="form-group">
+
+                    <label for="supplierName">
+                        Supplier Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="supplierName"
+                        placeholder="Enter supplier name"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- CONTACT PERSON -->
+                <div class="form-group">
+
+                    <label for="supplierContact">
+                        Contact Person
+                    </label>
+
+                    <input
+                        type="text"
+                        id="supplierContact"
+                        placeholder="Enter contact person"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PHONE -->
+                <div class="form-group">
+
+                    <label for="supplierPhone">
+                        Phone Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="supplierPhone"
+                        placeholder="Enter phone number"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- EMAIL -->
+                <div class="form-group">
+
+                    <label for="supplierEmail">
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="supplierEmail"
+                        placeholder="Enter email address"
+                    >
+
+                </div>
+
+
+                <!-- ADDRESS -->
+                <div class="form-group">
+
+                    <label for="supplierAddress">
+                        Address
+                    </label>
+
+                    <input
+                        type="text"
+                        id="supplierAddress"
+                        placeholder="Enter supplier address"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- MESSAGE -->
+                <div
+                    id="supplierMessage"
+                    class="form-message"
+                ></div>
+
+
+                <!-- MODAL ACTIONS -->
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelSupplierBtn"
+                    >
+                        Cancel
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                        id="saveSupplierBtn"
+                    >
+                        Save Supplier
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- JAVASCRIPT -->
+    <script
+        type="module"
+        src="js/suppliers.js"
+    ></script>
+
+</body>
+
+</html>

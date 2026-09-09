@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Deja Brew | Stock Out</title>
+
+    <link rel="icon" type="image/png" href="images/dejabrew.png">
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+</head>
+
+<body class="dashboard-body">
+
+    <!-- MOBILE OVERLAY -->
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <!-- SIDEBAR -->
+    <aside
+        class="sidebar"
+        id="sidebar"
+    >
+
+        <!-- BRAND / LOGO -->
+        <div class="brand">
+
+            <div class="brand-icon">
+
+                <img
+                    src="images/deja-brew-logo.jpeg"
+                    alt="Deja Brew Logo"
+                    class="brand-logo"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+        <nav class="navigation">
+
+            <a
+                href="dashboard.html"
+                class="nav-item"
+            >
+                <span>🏠</span>
+                <span>Dashboard</span>
+            </a>
+
+
+            <a
+                href="products.html"
+                class="nav-item"
+            >
+                <span>📦</span>
+                <span>Products</span>
+            </a>
+
+
+            <a
+                href="categories.html"
+                class="nav-item"
+            >
+                <span>🗂️</span>
+                <span>Categories</span>
+            </a>
+
+
+            <a
+                href="stock-in.html"
+                class="nav-item"
+            >
+                <span>📥</span>
+                <span>Stock In</span>
+            </a>
+
+
+            <a
+                href="stock-out.html"
+                class="nav-item active"
+            >
+                <span>📤</span>
+                <span>Stock Out</span>
+            </a>
+
+
+            <a
+                href="suppliers.html"
+                class="nav-item"
+            >
+                <span>🚚</span>
+                <span>Suppliers</span>
+            </a>
+
+
+            <a
+                href="reports.html"
+                class="nav-item"
+            >
+                <span>📊</span>
+                <span>Reports</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+        <div class="sidebar-bottom">
+
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+            >
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+
+        <!-- TOPBAR -->
+        <header class="topbar">
+
+            <button
+                class="menu-btn"
+                id="menuBtn"
+            >
+                ☰
+            </button>
+
+
+            <div class="topbar-title">
+
+                <h1>
+                    Stock Out
+                </h1>
+
+                <p>
+                    Record products removed from inventory
+                </p>
+
+            </div>
+
+
+            <!-- USER -->
+            <div class="user-area">
+
+                <div class="user-info">
+
+                    <strong id="userName">
+                        Loading...
+                    </strong>
+
+                    <small id="userRole">
+                        User
+                    </small>
+
+                </div>
+
+
+                <div class="user-avatar">
+                    👤
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- PAGE CONTENT -->
+        <section class="dashboard-content">
+
+
+            <!-- PAGE HEADER -->
+            <div class="products-page-header">
+
+                <div>
+
+                    <h2>
+                        Stock Out Management
+                    </h2>
+
+                    <p>
+                        Record outgoing products and update inventory.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="primary-btn"
+                    id="openStockOutBtn"
+                >
+                    + Stock Out
+                </button>
+
+            </div>
+
+
+            <!-- SEARCH -->
+            <div class="products-toolbar">
+
+                <div class="search-box">
+
+                    <span>
+                        🔍
+                    </span>
+
+                    <input
+                        type="text"
+                        id="searchStockOut"
+                        placeholder="Search stock-out records..."
+                    >
+
+                </div>
+
+
+                <div class="product-count">
+
+                    <span id="transactionCount">
+                        0 transactions
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- TRANSACTIONS TABLE -->
+            <div class="section-card products-card">
+
+                <div class="table-wrapper">
+
+                    <table class="products-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Product
+                                </th>
+
+                                <th>
+                                    SKU
+                                </th>
+
+                                <th>
+                                    Quantity
+                                </th>
+
+                                <th>
+                                    Reason
+                                </th>
+
+                                <th>
+                                    Date
+                                </th>
+
+                                <th>
+                                    User
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="stockOutTable">
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-table"
+                                >
+                                    Loading records...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- STOCK OUT MODAL -->
+    <div
+        class="modal-overlay"
+        id="stockOutModal"
+    >
+
+        <div class="product-modal">
+
+
+            <!-- MODAL HEADER -->
+            <div class="modal-header">
+
+                <div>
+
+                    <h2>
+                        Stock Out
+                    </h2>
+
+                    <p>
+                        Record products removed from inventory
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="modal-close"
+                    id="closeStockOutBtn"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <!-- FORM -->
+            <form id="stockOutForm">
+
+
+                <!-- PRODUCT -->
+                <div class="form-group">
+
+                    <label for="stockOutProduct">
+                        Product
+                    </label>
+
+                    <select
+                        id="stockOutProduct"
+                        required
+                    >
+
+                        <option value="">
+                            Select a product
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- AVAILABLE STOCK -->
+                <div
+                    id="stockInfo"
+                    class="form-message"
+                >
+
+                    Available Stock:
+
+                    <strong id="availableStock">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <!-- QUANTITY -->
+                <div class="form-group">
+
+                    <label for="stockOutQuantity">
+                        Quantity
+                    </label>
+
+                    <input
+                        type="number"
+                        id="stockOutQuantity"
+                        min="1"
+                        step="1"
+                        placeholder="Enter quantity"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- REASON -->
+                <div class="form-group">
+
+                    <label for="stockOutReason">
+                        Reason
+                    </label>
+
+                    <select
+                        id="stockOutReason"
+                        required
+                    >
+
+                        <option value="">
+                            Select reason
+                        </option>
+
+                        <option value="Sale">
+                            Sale
+                        </option>
+
+                        <option value="Damaged">
+                            Damaged
+                        </option>
+
+                        <option value="Expired">
+                            Expired
+                        </option>
+
+                        <option value="Used">
+                            Used
+                        </option>
+
+                        <option value="Other">
+                            Other
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- NOTES -->
+                <div class="form-group">
+
+                    <label for="stockOutNotes">
+                        Notes
+                    </label>
+
+                    <input
+                        type="text"
+                        id="stockOutNotes"
+                        placeholder="Optional notes"
+                    >
+
+                </div>
+
+
+                <!-- MESSAGE -->
+                <div
+                    id="stockOutMessage"
+                    class="form-message"
+                ></div>
+
+
+                <!-- BUTTONS -->
+                <div class="modal-actions">
+
+                    <button
+                        type="button"
+                        class="secondary-btn"
+                        id="cancelStockOutBtn"
+                    >
+                        Cancel
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        class="primary-btn"
+                        id="saveStockOutBtn"
+                    >
+                        Save Stock Out
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- JAVASCRIPT -->
+    <script
+        type="module"
+        src="js/stock-out.js"
+    ></script>
+
+</body>
+
+</html>
