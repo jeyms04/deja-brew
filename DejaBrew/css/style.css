@@ -2093,3 +2093,31 @@ table tbody tr:hover {
         padding: 0;
     }
 }
+
+/* ==========================================
+   MOBILE SIDEBAR SCROLL FIX
+========================================== */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar::-webkit-scrollbar {
+        width: 5px;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 10px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+}
