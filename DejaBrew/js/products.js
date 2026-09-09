@@ -3,15 +3,26 @@ import {
     collection,
     deleteDoc,
     doc,
+    getDoc,
     getDocs,
     serverTimestamp,
     updateDoc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
-import { auth, db } from "./firebase-config.js";
+
+import {
+    auth,
+    db
+} from "./firebase-config.js";
+
 import {
     onAuthStateChanged,
     signOut
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-auth.js";
+
+
+// ==========================================
+// ELEMENTS
+// ==========================================
 
 const productsTable =
     document.getElementById("productsTable");
@@ -28,7 +39,7 @@ const productModal =
 const addProductBtn =
     document.getElementById("addProductBtn");
 
-const closeModal =
+const closeModalBtn =
     document.getElementById("closeModal");
 
 const cancelProduct =
@@ -43,8 +54,34 @@ const modalTitle =
 const productMessage =
     document.getElementById("productMessage");
 
+const userName =
+    document.getElementById("userName");
+
+const userRole =
+    document.getElementById("userRole");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+const menuBtn =
+    document.getElementById("menuBtn");
+
+const sidebar =
+    document.getElementById("sidebar");
+
+const sidebarOverlay =
+    document.getElementById("sidebarOverlay");
+
+
+// ==========================================
+// VARIABLES
+// ==========================================
 
 let products = [];
+
+let currentUserRole = "staff";
+
+let isSavingProduct = false;
 
 
 // ==========================================
@@ -55,38 +92,73 @@ onAuthStateChanged(auth, async (user) => {
 
     if (!user) {
 
-        window.location.href = "login.html";
+        window.location.href =
+            "login.html";
 
         return;
     }
 
 
-    document.getElementById("userName").textContent =
+    // Display logged-in user
+
+    userName.textContent =
         user.displayName || user.email;
 
 
     try {
 
-        const userSnapshot =
-            await getDocs(
-                collection(db, "users")
+        // Get ONLY the current user's document.
+        // This works with the secure Firestore rules.
+
+        const userRef =
+            doc(
+                db,
+                "users",
+                user.uid
             );
 
-        userSnapshot.forEach((userDoc) => {
 
-            if (userDoc.id === user.uid) {
+        const userSnapshot =
+            await getDoc(userRef);
 
-                const role =
-                    userDoc.data().role || "staff";
 
-                document.getElementById("userRole")
-                    .textContent =
-                    role.charAt(0).toUpperCase()
-                    + role.slice(1);
+        if (
+            userSnapshot.exists()
+        ) {
 
-            }
+            const userData =
+                userSnapshot.data();
 
-        });
+
+            currentUserRole =
+                (
+                    userData.role ||
+                    "staff"
+                ).toLowerCase();
+
+        } else {
+
+            currentUserRole =
+                "staff";
+
+        }
+
+
+        // Display role
+
+        userRole.textContent =
+            currentUserRole
+                .charAt(0)
+                .toUpperCase()
+            +
+            currentUserRole.slice(1);
+
+
+        console.log(
+            "Logged-in role:",
+            currentUserRole
+        );
+
 
     } catch (error) {
 
@@ -95,10 +167,19 @@ onAuthStateChanged(auth, async (user) => {
             error
         );
 
+
+        currentUserRole =
+            "staff";
+
+        userRole.textContent =
+            "Staff";
+
     }
 
 
-    loadProducts();
+    // Load products
+
+    await loadProducts();
 
 });
 
@@ -111,29 +192,50 @@ async function loadProducts() {
 
     try {
 
+        productsTable.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="empty-table"
+                >
+                    Loading products...
+                </td>
+            </tr>
+        `;
+
+
         const snapshot =
             await getDocs(
-                collection(db, "products")
+                collection(
+                    db,
+                    "products"
+                )
             );
 
 
         products = [];
 
 
-        snapshot.forEach((productDoc) => {
+        snapshot.forEach(
+            (productDoc) => {
 
-            products.push({
+                products.push({
 
-                id: productDoc.id,
+                    id:
+                        productDoc.id,
 
-                ...productDoc.data()
+                    ...productDoc.data()
 
-            });
+                });
 
-        });
+            }
+        );
 
 
-        displayProducts(products);
+        displayProducts(
+            products
+        );
+
 
     } catch (error) {
 
@@ -144,18 +246,14 @@ async function loadProducts() {
 
 
         productsTable.innerHTML = `
-
             <tr>
-
                 <td
                     colspan="7"
                     class="empty-table"
                 >
                     Unable to load products.
                 </td>
-
             </tr>
-
         `;
 
     }
@@ -167,193 +265,259 @@ async function loadProducts() {
 // DISPLAY PRODUCTS
 // ==========================================
 
-function displayProducts(productList) {
+function displayProducts(
+    productList
+) {
 
     productCount.textContent =
-        `${productList.length} product${productList.length !== 1 ? "s" : ""}`;
+        `${productList.length} product${
+            productList.length !== 1
+                ? "s"
+                : ""
+        }`;
 
 
-    if (productList.length === 0) {
+    if (
+        productList.length === 0
+    ) {
 
         productsTable.innerHTML = `
-
             <tr>
-
                 <td
                     colspan="7"
                     class="empty-table"
                 >
                     No products found.
                 </td>
-
             </tr>
-
         `;
 
         return;
+
     }
 
 
     productsTable.innerHTML = "";
 
 
-    productList.forEach((product) => {
+    productList.forEach(
+        (product) => {
 
-        const stock =
-            Number(product.stock || 0);
-
-        const minStock =
-            Number(product.minStock || 0);
-
-
-        let status = "";
-        let statusClass = "";
+            const stock =
+                Number(
+                    product.stock || 0
+                );
 
 
-        if (stock === 0) {
-
-            status = "Out of Stock";
-            statusClass = "status-out";
-
-        }
-
-        else if (stock <= minStock) {
-
-            status = "Low Stock";
-            statusClass = "status-low";
-
-        }
-
-        else {
-
-            status = "In Stock";
-            statusClass = "status-good";
-
-        }
+            const minStock =
+                Number(
+                    product.minStock || 0
+                );
 
 
-        const row =
-            document.createElement("tr");
+            // Determine status
+
+            let status = "";
+
+            let statusClass = "";
 
 
-        row.innerHTML = `
+            if (stock === 0) {
 
-            <td>
+                status =
+                    "Out of Stock";
 
-                <div class="product-name-cell">
+                statusClass =
+                    "status-out";
 
-                    <div class="product-icon">
-                        ☕
+            }
+
+            else if (
+                stock <= minStock
+            ) {
+
+                status =
+                    "Low Stock";
+
+                statusClass =
+                    "status-low";
+
+            }
+
+            else {
+
+                status =
+                    "In Stock";
+
+                statusClass =
+                    "status-good";
+
+            }
+
+
+            const row =
+                document.createElement(
+                    "tr"
+                );
+
+
+            // Admin gets Delete.
+            // Staff only gets Edit.
+
+            const deleteButton =
+                currentUserRole === "admin"
+                    ? `
+                        <button
+                            type="button"
+                            class="delete-btn"
+                            data-id="${product.id}"
+                        >
+                            🗑️
+                        </button>
+                      `
+                    : "";
+
+
+            row.innerHTML = `
+
+                <td>
+
+                    <div class="product-name-cell">
+
+                        <div class="product-icon">
+                            ☕
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                ${escapeHTML(
+                                    product.name ||
+                                    "Unnamed"
+                                )}
+                            </strong>
+
+                        </div>
+
                     </div>
 
-                    <div>
+                </td>
 
-                        <strong>
-                            ${escapeHTML(product.name || "Unnamed")}
-                        </strong>
+
+                <td>
+                    ${escapeHTML(
+                        product.sku || "-"
+                    )}
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        product.category || "-"
+                    )}
+                </td>
+
+
+                <td>
+                    ₱${Number(
+                        product.price || 0
+                    ).toFixed(2)}
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${stock}
+                    </strong>
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="status-badge ${statusClass}"
+                    >
+                        ${status}
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <div class="action-buttons">
+
+                        <button
+                            type="button"
+                            class="edit-btn"
+                            data-id="${product.id}"
+                        >
+                            ✏️
+                        </button>
+
+                        ${deleteButton}
 
                     </div>
 
-                </div>
+                </td>
 
-            </td>
-
-
-            <td>
-                ${escapeHTML(product.sku || "-")}
-            </td>
+            `;
 
 
-            <td>
-                ${escapeHTML(product.category || "-")}
-            </td>
+            productsTable.appendChild(
+                row
+            );
+
+        }
+    );
 
 
-            <td>
-                ₱${Number(product.price || 0).toFixed(2)}
-            </td>
+    // ======================================
+    // EDIT BUTTONS
+    // ======================================
 
-
-            <td>
-                <strong>${stock}</strong>
-            </td>
-
-
-            <td>
-
-                <span class="status-badge ${statusClass}">
-                    ${status}
-                </span>
-
-            </td>
-
-
-            <td>
-
-                <div class="action-buttons">
-
-                    <button
-                        class="edit-btn"
-                        data-id="${product.id}"
-                    >
-                        ✏️
-                    </button>
-
-                    <button
-                        class="delete-btn"
-                        data-id="${product.id}"
-                    >
-                        🗑️
-                    </button>
-
-                </div>
-
-            </td>
-
-        `;
-
-
-        productsTable.appendChild(row);
-
-    });
-
-
-    // Edit buttons
     document
         .querySelectorAll(".edit-btn")
-        .forEach((button) => {
+        .forEach(
+            (button) => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    editProduct(
-                        button.dataset.id
-                    );
+                        editProduct(
+                            button.dataset.id
+                        );
 
-                }
-            );
+                    }
+                );
 
-        });
+            }
+        );
 
 
-    // Delete buttons
+    // ======================================
+    // DELETE BUTTONS
+    // ======================================
+
     document
         .querySelectorAll(".delete-btn")
-        .forEach((button) => {
+        .forEach(
+            (button) => {
 
-            button.addEventListener(
-                "click",
-                () => {
+                button.addEventListener(
+                    "click",
+                    () => {
 
-                    deleteProduct(
-                        button.dataset.id
-                    );
+                        deleteProduct(
+                            button.dataset.id
+                        );
 
-                }
-            );
+                    }
+                );
 
-        });
+            }
+        );
 
 }
 
@@ -372,40 +536,61 @@ searchProduct.addEventListener(
                 .trim();
 
 
+        if (!search) {
+
+            displayProducts(
+                products
+            );
+
+            return;
+
+        }
+
+
         const filtered =
-            products.filter((product) => {
+            products.filter(
+                (product) => {
 
-                return (
+                    return (
 
-                    String(product.name || "")
-                        .toLowerCase()
-                        .includes(search)
+                        String(
+                            product.name || ""
+                        )
+                            .toLowerCase()
+                            .includes(search)
 
-                    ||
+                        ||
 
-                    String(product.sku || "")
-                        .toLowerCase()
-                        .includes(search)
+                        String(
+                            product.sku || ""
+                        )
+                            .toLowerCase()
+                            .includes(search)
 
-                    ||
+                        ||
 
-                    String(product.category || "")
-                        .toLowerCase()
-                        .includes(search)
+                        String(
+                            product.category || ""
+                        )
+                            .toLowerCase()
+                            .includes(search)
 
-                );
+                    );
 
-            });
+                }
+            );
 
 
-        displayProducts(filtered);
+        displayProducts(
+            filtered
+        );
 
     }
 );
 
 
 // ==========================================
-// OPEN ADD MODAL
+// OPEN ADD PRODUCT MODAL
 // ==========================================
 
 addProductBtn.addEventListener(
@@ -414,23 +599,34 @@ addProductBtn.addEventListener(
 
         productForm.reset();
 
+
         document.getElementById(
             "productId"
         ).value = "";
 
+
         modalTitle.textContent =
             "Add Product";
 
-        productMessage.textContent = "";
 
-        productModal.classList.add("active");
+        productMessage.textContent =
+            "";
+
+
+        productMessage.className =
+            "form-message";
+
+
+        productModal.classList.add(
+            "active"
+        );
 
     }
 );
 
 
 // ==========================================
-// CLOSE MODAL
+// CLOSE PRODUCT MODAL
 // ==========================================
 
 function closeProductModal() {
@@ -439,10 +635,26 @@ function closeProductModal() {
         "active"
     );
 
+
+    productForm.reset();
+
+
+    document.getElementById(
+        "productId"
+    ).value = "";
+
+
+    productMessage.textContent =
+        "";
+
+
+    productMessage.className =
+        "form-message";
+
 }
 
 
-closeModal.addEventListener(
+closeModalBtn.addEventListener(
     "click",
     closeProductModal
 );
@@ -454,12 +666,15 @@ cancelProduct.addEventListener(
 );
 
 
+// Click outside modal
+
 productModal.addEventListener(
     "click",
     (event) => {
 
         if (
-            event.target === productModal
+            event.target ===
+            productModal
         ) {
 
             closeProductModal();
@@ -481,49 +696,161 @@ productForm.addEventListener(
         event.preventDefault();
 
 
+        // Prevent double click
+
+        if (isSavingProduct) {
+
+            return;
+
+        }
+
+
         const id =
             document.getElementById(
                 "productId"
             ).value;
 
 
+        const name =
+            document.getElementById(
+                "productName"
+            ).value.trim();
+
+
+        const sku =
+            document.getElementById(
+                "productSKU"
+            ).value.trim();
+
+
+        const category =
+            document.getElementById(
+                "productCategory"
+            ).value.trim();
+
+
+        const price =
+            Number(
+                document.getElementById(
+                    "productPrice"
+                ).value
+            );
+
+
+        const stock =
+            Number(
+                document.getElementById(
+                    "productStock"
+                ).value
+            );
+
+
+        const minStock =
+            Number(
+                document.getElementById(
+                    "productMinStock"
+                ).value
+            );
+
+
+        // ======================================
+        // VALIDATION
+        // ======================================
+
+        if (!name) {
+
+            showError(
+                "Please enter a product name."
+            );
+
+            return;
+
+        }
+
+
+        if (!sku) {
+
+            showError(
+                "Please enter a SKU."
+            );
+
+            return;
+
+        }
+
+
+        if (!category) {
+
+            showError(
+                "Please enter a category."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            isNaN(price) ||
+            price < 0
+        ) {
+
+            showError(
+                "Please enter a valid price."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            isNaN(stock) ||
+            stock < 0
+        ) {
+
+            showError(
+                "Please enter a valid stock."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            isNaN(minStock) ||
+            minStock < 0
+        ) {
+
+            showError(
+                "Please enter a valid minimum stock."
+            );
+
+            return;
+
+        }
+
+
         const productData = {
 
             name:
-                document.getElementById(
-                    "productName"
-                ).value.trim(),
+                name,
 
             sku:
-                document.getElementById(
-                    "productSKU"
-                ).value.trim(),
+                sku,
 
             category:
-                document.getElementById(
-                    "productCategory"
-                ).value.trim(),
+                category,
 
             price:
-                Number(
-                    document.getElementById(
-                        "productPrice"
-                    ).value
-                ),
+                price,
 
             stock:
-                Number(
-                    document.getElementById(
-                        "productStock"
-                    ).value
-                ),
+                stock,
 
             minStock:
-                Number(
-                    document.getElementById(
-                        "productMinStock"
-                    ).value
-                ),
+                minStock,
 
             updatedAt:
                 serverTimestamp()
@@ -533,57 +860,104 @@ productForm.addEventListener(
 
         try {
 
+            isSavingProduct =
+                true;
+
+
+            // Disable submit button
+
+            const submitButton =
+                productForm.querySelector(
+                    'button[type="submit"]'
+                );
+
+
+            if (submitButton) {
+
+                submitButton.disabled =
+                    true;
+
+            }
+
+
+            // ==================================
+            // UPDATE PRODUCT
+            // ==================================
+
             if (id) {
 
-                // UPDATE
                 await updateDoc(
+
                     doc(
                         db,
                         "products",
                         id
                     ),
+
                     productData
+
                 );
 
 
-                productMessage.textContent =
-                    "Product updated successfully!";
+                showSuccess(
+                    "Product updated successfully!"
+                );
 
             }
 
+
+            // ==================================
+            // ADD PRODUCT
+            // ==================================
+
             else {
 
-                // CREATE
                 await addDoc(
+
                     collection(
                         db,
                         "products"
                     ),
+
                     {
 
                         ...productData,
 
                         createdAt:
-                            serverTimestamp()
+                            serverTimestamp(),
+
+                        createdBy:
+                            auth.currentUser
+                                ? auth.currentUser.uid
+                                : ""
 
                     }
+
                 );
 
 
-                productMessage.textContent =
-                    "Product added successfully!";
+                showSuccess(
+                    "Product added successfully!"
+                );
 
             }
 
 
+            // Reload products
+
             await loadProducts();
 
 
-            setTimeout(() => {
+            // Close modal
 
-                closeProductModal();
+            setTimeout(
+                () => {
 
-            }, 700);
+                    closeProductModal();
+
+                },
+                700
+            );
 
 
         } catch (error) {
@@ -594,8 +968,30 @@ productForm.addEventListener(
             );
 
 
-            productMessage.textContent =
-                "Unable to save product.";
+            showError(
+                error.message ||
+                "Unable to save product."
+            );
+
+
+        } finally {
+
+            isSavingProduct =
+                false;
+
+
+            const submitButton =
+                productForm.querySelector(
+                    'button[type="submit"]'
+                );
+
+
+            if (submitButton) {
+
+                submitButton.disabled =
+                    false;
+
+            }
 
         }
 
@@ -616,22 +1012,29 @@ function editProduct(id) {
         );
 
 
-    if (!product) return;
+    if (!product) {
+
+        return;
+
+    }
 
 
     document.getElementById(
         "productId"
-    ).value = product.id;
+    ).value =
+        product.id;
 
 
     document.getElementById(
         "productName"
-    ).value = product.name || "";
+    ).value =
+        product.name || "";
 
 
     document.getElementById(
         "productSKU"
-    ).value = product.sku || "";
+    ).value =
+        product.sku || "";
 
 
     document.getElementById(
@@ -662,7 +1065,12 @@ function editProduct(id) {
         "Edit Product";
 
 
-    productMessage.textContent = "";
+    productMessage.textContent =
+        "";
+
+
+    productMessage.className =
+        "form-message";
 
 
     productModal.classList.add(
@@ -678,6 +1086,21 @@ function editProduct(id) {
 
 async function deleteProduct(id) {
 
+    // Frontend Admin check
+
+    if (
+        currentUserRole !== "admin"
+    ) {
+
+        alert(
+            "Only administrators can delete products."
+        );
+
+        return;
+
+    }
+
+
     const product =
         products.find(
             (item) =>
@@ -685,26 +1108,36 @@ async function deleteProduct(id) {
         );
 
 
-    if (!product) return;
+    if (!product) {
+
+        return;
+
+    }
 
 
     const confirmed =
         confirm(
-            `Delete "${product.name}"?`
+            `Are you sure you want to delete "${product.name}"?`
         );
 
 
-    if (!confirmed) return;
+    if (!confirmed) {
+
+        return;
+
+    }
 
 
     try {
 
         await deleteDoc(
+
             doc(
                 db,
                 "products",
                 id
             )
+
         );
 
 
@@ -720,6 +1153,7 @@ async function deleteProduct(id) {
 
 
         alert(
+            error.message ||
             "Unable to delete product."
         );
 
@@ -729,35 +1163,61 @@ async function deleteProduct(id) {
 
 
 // ==========================================
-// SECURITY
+// MESSAGE FUNCTIONS
+// ==========================================
+
+function showSuccess(message) {
+
+    productMessage.textContent =
+        message;
+
+    productMessage.className =
+        "form-message success-message";
+
+}
+
+
+function showError(message) {
+
+    productMessage.textContent =
+        message;
+
+    productMessage.className =
+        "form-message error-message";
+
+}
+
+
+// ==========================================
+// HTML SECURITY
 // ==========================================
 
 function escapeHTML(value) {
 
     return String(value)
 
-        .replace(
-            /&/g,
+        .replaceAll(
+            "&",
             "&amp;"
         )
 
-        .replace(
-            /</g,
+        .replaceAll(
+            "<",
             "&lt;"
         )
 
-        .replace(
-            />/g,
+        .replaceAll(
+            ">",
             "&gt;"
         )
 
-        .replace(
-            /"/g,
+        .replaceAll(
+            '"',
             "&quot;"
         )
 
-        .replace(
-            /'/g,
+        .replaceAll(
+            "'",
             "&#039;"
         );
 
@@ -768,44 +1228,33 @@ function escapeHTML(value) {
 // LOGOUT
 // ==========================================
 
-document
-    .getElementById("logoutBtn")
-    .addEventListener(
-        "click",
-        async () => {
+logoutBtn.addEventListener(
+    "click",
+    async () => {
 
-            try {
+        try {
 
-                await signOut(auth);
+            await signOut(auth);
 
-                window.location.href =
-                    "login.html";
+            window.location.href =
+                "login.html";
 
-            } catch (error) {
+        } catch (error) {
 
-                console.error(error);
-
-            }
+            console.error(
+                "Logout error:",
+                error
+            );
 
         }
-    );
+
+    }
+);
 
 
 // ==========================================
 // MOBILE SIDEBAR
 // ==========================================
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const sidebar =
-    document.getElementById("sidebar");
-
-const sidebarOverlay =
-    document.getElementById(
-        "sidebarOverlay"
-    );
-
 
 menuBtn.addEventListener(
     "click",
