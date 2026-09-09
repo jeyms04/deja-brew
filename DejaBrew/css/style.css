@@ -191,27 +191,31 @@ body {
 .brand {
     display: flex;
     align-items: center;
+    justify-content: center;
 
-    gap: 12px;
-
-    padding: 25px 20px;
+    padding: 15px;
 
     border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
 .brand-icon {
-    width: 45px;
-    height: 45px;
+    width: 130px;
+    height: 70px;
+    border-radius: 15px;
+    overflow: hidden;
+}
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.brand-logo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
 
-    background: #6f4e37;
+.brand-icon img {
+    width: 100%;
+    height: 100%;
 
-    border-radius: 12px;
-
-    font-size: 25px;
+    object-fit: cover;
 }
 
 .brand h2 {
@@ -1293,4 +1297,799 @@ td {
         grid-template-columns: 1fr;
     }
 
+}
+
+/* ==========================================
+   REPORTS
+========================================== */
+
+.report-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.report-card {
+    background: white;
+    border: 1px solid #e8e2dc;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.report-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0e8e1;
+    border-radius: 12px;
+    font-size: 22px;
+}
+
+.report-card span {
+    display: block;
+    color: #8b817b;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.report-card strong {
+    display: block;
+    color: #4d4039;
+    font-size: 24px;
+}
+
+
+/* STOCK MOVEMENT */
+
+.report-movement-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-bottom: 20px;
+}
+
+.report-movement-card {
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.report-section-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0e8e1;
+    border-radius: 12px;
+    font-size: 22px;
+}
+
+.report-movement-card span {
+    display: block;
+    color: #8b817b;
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.report-movement-card strong {
+    display: block;
+    color: #4d4039;
+    font-size: 24px;
+}
+
+.report-movement-card small {
+    display: block;
+    color: #8b817b;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+
+/* REPORT TOOLBAR */
+
+.report-toolbar {
+    margin-bottom: 20px;
+}
+
+.report-filter {
+    min-width: 160px;
+    padding: 11px 13px;
+    border: 1px solid #ddd6d1;
+    border-radius: 9px;
+    background: white;
+    color: #4d4039;
+    font-size: 14px;
+    outline: none;
+}
+
+.report-filter:focus {
+    border-color: #6f4e37;
+    box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.1);
+}
+
+
+/* PRINT */
+
+@media print {
+
+    .sidebar,
+    .topbar,
+    .products-page-header button,
+    .report-toolbar {
+        display: none !important;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .dashboard-content {
+        padding: 20px;
+    }
+
+    .report-card,
+    .report-movement-card,
+    .products-card {
+        break-inside: avoid;
+    }
+
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .report-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 768px) {
+
+    .report-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .report-movement-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-toolbar {
+        flex-wrap: wrap;
+    }
+
+    .report-filter {
+        width: 100%;
+    }
+
+}
+
+/* ===============================
+   SIDEBAR CLICK FIX
+================================ */
+
+.sidebar {
+    position: fixed;
+    z-index: 1001;
+}
+
+.sidebar-overlay {
+    z-index: 1000;
+}
+
+.sidebar a {
+    position: relative;
+    z-index: 1002;
+    pointer-events: auto;
+    cursor: pointer;
+}
+
+.sidebar-bottom {
+    position: relative;
+    z-index: 1002;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* ==========================================
+   DEJA BREW - MODERN HOVER EFFECTS
+========================================== */
+
+/* SIDEBAR LINKS */
+.sidebar a {
+    transition:
+        background 0.25s ease,
+        color 0.25s ease,
+        transform 0.2s ease,
+        padding-left 0.25s ease;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.10);
+    color: #ffffff;
+    transform: translateX(4px);
+}
+
+/* ACTIVE SIDEBAR LINK */
+.sidebar a.active {
+    background: rgba(255, 255, 255, 0.15);
+    color: #ffffff;
+}
+
+/* SIDEBAR ICON HOVER */
+.sidebar a:hover span:first-of-type {
+    transform: scale(1.08);
+}
+
+
+/* ==========================================
+   BUTTON HOVER
+========================================== */
+
+button {
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        background 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+
+/* ==========================================
+   PRIMARY BUTTONS
+========================================== */
+
+.btn-primary:hover,
+.add-btn:hover,
+button[type="submit"]:hover {
+    box-shadow: 0 5px 15px rgba(111, 78, 55, 0.25);
+}
+
+
+/* ==========================================
+   DASHBOARD CARDS
+========================================== */
+
+.dashboard-card,
+.stat-card,
+.summary-card,
+.stock-summary-card,
+.report-card,
+.report-movement-card,
+.products-card,
+.card {
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease,
+        border-color 0.25s ease;
+}
+
+.dashboard-card:hover,
+.stat-card:hover,
+.summary-card:hover,
+.stock-summary-card:hover,
+.report-card:hover,
+.report-movement-card:hover,
+.products-card:hover,
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(77, 64, 57, 0.10);
+    border-color: #d8c8bc;
+}
+
+
+/* ==========================================
+   TABLE ROW HOVER
+========================================== */
+
+table tbody tr {
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+table tbody tr:hover {
+    background: #faf7f4;
+}
+
+
+/* ==========================================
+   ACTION BUTTONS
+========================================== */
+
+.edit-btn,
+.delete-btn,
+.view-btn,
+.action-btn {
+    transition:
+        transform 0.2s ease,
+        opacity 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.edit-btn:hover,
+.delete-btn:hover,
+.view-btn:hover,
+.action-btn:hover {
+    transform: translateY(-2px);
+    opacity: 0.9;
+}
+
+
+/* ==========================================
+   SEARCH INPUT
+========================================== */
+
+input,
+select {
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+input:hover,
+select:hover {
+    border-color: #cbb8aa;
+}
+
+input:focus,
+select:focus {
+    border-color: #6f4e37;
+    box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.10);
+}
+
+
+/* ==========================================
+   LOGO
+========================================== */
+
+.brand-icon {
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.brand-icon:hover {
+    transform: scale(1.03);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ==========================================
+   TOPBAR USER
+========================================== */
+
+.topbar-user {
+    transition: transform 0.2s ease;
+}
+
+.topbar-user:hover {
+    transform: translateY(-1px);
+}
+
+
+/* ==========================================
+   LINKS
+========================================== */
+
+a {
+    transition:
+        color 0.2s ease,
+        opacity 0.2s ease;
+}
+
+
+/* ==========================================
+   MODAL BUTTONS
+========================================== */
+
+.modal button:hover,
+.profile-modal button:hover {
+    transform: translateY(-2px);
+}
+
+
+/* ==========================================
+   SMOOTH PAGE FEEL
+========================================== */
+
+* {
+    scroll-behavior: smooth;
+}
+
+.auth-logo {
+    margin: 0 auto 0 !important;
+    padding: 0 !important;
+}
+
+.auth-logo img {
+    width: 100px;
+    height: 100px;
+    display: block;
+    object-fit: contain;
+    margin: 0 auto !important;
+}
+
+.auth-container h1,
+.auth-card h1 {
+    margin-top: -5px !important;
+    margin-bottom: 4px !important;
+    padding: 0 !important;
+}
+
+/* =========================================================
+   DEJA BREW — PREMIUM COFFEE UI UPGRADE
+   Visual-only layer. Existing Firebase/JS functionality
+   is preserved.
+   ========================================================= */
+
+:root {
+    --coffee-dark: #2b1d17;
+    --coffee: #6f4e37;
+    --coffee-light: #8b6248;
+    --cream: #f8f4f0;
+    --cream-dark: #eee5de;
+    --ink: #2d211b;
+    --muted: #8b817b;
+    --line: #e8e0da;
+    --soft-shadow: 0 8px 28px rgba(59,41,32,.07);
+    --hover-shadow: 0 14px 35px rgba(59,41,32,.13);
+}
+
+/* Background */
+body {
+    background:
+        radial-gradient(circle at 90% 0%, rgba(111,78,55,.07), transparent 26%),
+        linear-gradient(135deg, #faf7f4 0%, #f3eee9 100%);
+}
+
+/* Sidebar */
+.sidebar {
+    background:
+        radial-gradient(circle at 20% 10%, rgba(255,255,255,.07), transparent 25%),
+        linear-gradient(180deg, #3b2920 0%, #2e201a 100%);
+    box-shadow: 8px 0 28px rgba(43,29,23,.10);
+}
+
+.brand-icon {
+    background: #fff;
+    border: 4px solid rgba(255,255,255,.08);
+    box-shadow: 0 8px 22px rgba(0,0,0,.14);
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.brand-icon:hover {
+    transform: translateY(-2px) scale(1.025);
+    box-shadow: 0 12px 28px rgba(0,0,0,.20);
+}
+
+.nav-item {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid transparent;
+    transition: transform .22s ease, background .22s ease,
+                color .22s ease, border-color .22s ease,
+                box-shadow .22s ease;
+}
+
+.nav-item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 10px;
+    bottom: 10px;
+    width: 3px;
+    border-radius: 0 4px 4px 0;
+    background: #d9bda8;
+    transform: scaleY(0);
+    transition: transform .22s ease;
+}
+
+.nav-item:hover {
+    transform: translateX(4px);
+    background: rgba(255,255,255,.075);
+    border-color: rgba(255,255,255,.08);
+}
+
+.nav-item:hover::before,
+.nav-item.active::before {
+    transform: scaleY(1);
+}
+
+.nav-item.active {
+    background: linear-gradient(90deg, #765039, #694731);
+    box-shadow: 0 7px 18px rgba(0,0,0,.14);
+}
+
+.nav-item span:first-child {
+    transition: transform .22s ease;
+}
+
+.nav-item:hover span:first-child {
+    transform: scale(1.14) rotate(-3deg);
+}
+
+.logout-btn {
+    transition: background .22s ease, transform .22s ease;
+}
+
+.logout-btn:hover {
+    transform: translateX(4px);
+}
+
+/* Topbar */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 800;
+    backdrop-filter: blur(12px);
+    background: rgba(255,255,255,.92);
+    box-shadow: 0 1px 0 rgba(59,41,32,.04);
+}
+
+.user-area {
+    padding: 6px 8px 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(255,255,255,.85);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.user-area:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--soft-shadow);
+}
+
+.user-avatar {
+    background: linear-gradient(145deg, #f2e9e1, #e9ddd4);
+}
+
+/* Dashboard cards */
+.stat-card {
+    position: relative;
+    overflow: hidden;
+    min-height: 105px;
+    border-color: rgba(111,78,55,.10);
+    box-shadow: var(--soft-shadow);
+    transition: transform .25s ease, box-shadow .25s ease,
+                border-color .25s ease;
+}
+
+.stat-card::after {
+    content: "";
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    right: -40px;
+    bottom: -50px;
+    border-radius: 50%;
+    background: rgba(111,78,55,.045);
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+    border-color: rgba(111,78,55,.20);
+}
+
+.stat-icon {
+    transition: transform .25s ease, background .25s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.08) rotate(-3deg);
+    background: #eaded4;
+}
+
+.stat-card h2 {
+    color: #51372a;
+    letter-spacing: -.5px;
+}
+
+/* Welcome hero */
+.welcome-card {
+    position: relative;
+    min-height: 190px;
+    padding: 34px 36px;
+    background:
+        radial-gradient(circle at 82% 20%, rgba(255,255,255,.13), transparent 25%),
+        linear-gradient(135deg, #765039 0%, #5b3e2c 55%, #432d22 100%);
+    box-shadow: 0 12px 30px rgba(79,53,39,.18);
+}
+
+.welcome-card::after {
+    content: "";
+    position: absolute;
+    width: 190px;
+    height: 190px;
+    right: -70px;
+    bottom: -100px;
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 50%;
+}
+
+.welcome-card h2 {
+    font-size: clamp(22px, 2.2vw, 30px);
+    line-height: 1.25;
+    letter-spacing: -.5px;
+}
+
+.coffee-decoration {
+    position: relative;
+    z-index: 1;
+    transition: transform .35s ease, opacity .35s ease;
+}
+
+.welcome-card:hover .coffee-decoration {
+    transform: translateY(-5px) rotate(-5deg) scale(1.04);
+    opacity: .38;
+}
+
+/* Section */
+.section-card {
+    box-shadow: var(--soft-shadow);
+    border-color: rgba(111,78,55,.10);
+}
+
+.section-header a {
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background .2s ease, transform .2s ease;
+}
+
+.section-header a:hover {
+    background: #f2ebe5;
+    transform: translateX(3px);
+}
+
+/* Quick actions */
+.quick-actions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.quick-action {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    min-height: 78px;
+    padding: 15px 17px;
+    background: rgba(255,255,255,.94);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    color: var(--ink);
+    text-decoration: none;
+    box-shadow: 0 4px 16px rgba(59,41,32,.045);
+    transition: transform .22s ease, box-shadow .22s ease,
+                border-color .22s ease, background .22s ease;
+}
+
+.quick-action:hover {
+    transform: translateY(-4px);
+    background: #fff;
+    border-color: #d6c5b8;
+    box-shadow: var(--hover-shadow);
+}
+
+.quick-action-icon {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: #f1e8e1;
+    font-size: 20px;
+    transition: transform .22s ease, background .22s ease;
+}
+
+.quick-action:hover .quick-action-icon {
+    transform: scale(1.08) rotate(-4deg);
+    background: #e8d9ce;
+}
+
+.quick-action strong {
+    display: block;
+    font-size: 13px;
+    color: #4d4039;
+}
+
+.quick-action small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: var(--muted);
+}
+
+/* Tables */
+table tbody tr {
+    transition: background .2s ease;
+}
+
+table tbody tr:hover {
+    background: #fbf7f3;
+}
+
+/* Buttons */
+.primary-btn,
+.btn-primary,
+.secondary-btn {
+    transition: transform .2s ease, box-shadow .2s ease,
+                background .2s ease, border-color .2s ease;
+}
+
+.primary-btn:hover,
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(111,78,55,.20);
+}
+
+.secondary-btn:hover {
+    transform: translateY(-2px);
+    background: #fbf7f4;
+    border-color: #cdbbae;
+    box-shadow: 0 6px 15px rgba(59,41,32,.07);
+}
+
+.status-badge {
+    transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.status-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(59,41,32,.08);
+}
+
+/* Mobile */
+@media (max-width: 1000px) {
+    .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .quick-actions {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .quick-action {
+        min-height: 68px;
+    }
+
+    .welcome-card {
+        min-height: 160px;
+        padding: 25px;
+    }
+
+    .user-area {
+        border: none;
+        background: transparent;
+        padding: 0;
+    }
 }
