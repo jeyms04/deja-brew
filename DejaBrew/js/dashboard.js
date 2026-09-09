@@ -667,3 +667,50 @@ if (logoutBtn) {
     );
 
 }
+
+// =====================================================
+// MOBILE HAMBURGER MENU
+// =====================================================
+
+const menuBtn = document.getElementById("menuBtn");
+const sidebar = document.getElementById("sidebar");
+const sidebarOverlay = document.getElementById("sidebarOverlay");
+
+if (menuBtn && sidebar && sidebarOverlay) {
+
+    // Open sidebar
+    menuBtn.addEventListener("click", () => {
+
+        sidebar.classList.toggle("active");
+
+        sidebarOverlay.classList.toggle("active");
+
+    });
+
+
+    // Close sidebar when clicking outside
+    sidebarOverlay.addEventListener("click", () => {
+
+        sidebar.classList.remove("active");
+
+        sidebarOverlay.classList.remove("active");
+
+    });
+
+
+    // Close sidebar after clicking a menu item
+    const sidebarLinks = sidebar.querySelectorAll("a");
+
+    sidebarLinks.forEach((link) => {
+
+        link.addEventListener("click", () => {
+
+            sidebar.classList.remove("active");
+
+            sidebarOverlay.classList.remove("active");
+
+        });
+
+    });
+
+}
