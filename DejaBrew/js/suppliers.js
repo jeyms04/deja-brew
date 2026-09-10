@@ -13,6 +13,7 @@ import {
     addDoc,
     updateDoc,
     deleteDoc,
+    setDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
@@ -838,7 +839,7 @@ supplierForm.addEventListener(
 
 
 // ==========================================
-// DELETE SUPPLIER
+// DELETE / ARCHIVE SUPPLIER
 // ==========================================
 
 async function deleteSupplier(id) {
@@ -854,9 +855,12 @@ async function deleteSupplier(id) {
         );
 
         return;
-
     }
 
+
+    // ======================================
+    // FIND SUPPLIER
+    // ======================================
 
     const supplier =
         suppliers.find(
@@ -866,25 +870,33 @@ async function deleteSupplier(id) {
 
     if (!supplier) {
 
-        return;
+        alert("Supplier not found.");
 
+        return;
     }
 
 
+    // ======================================
+    // CONFIRM DELETE
+    // ======================================
+
     const confirmed =
         confirm(
-            `Are you sure you want to delete "${supplier.name}"?`
+            `Are you sure you want to move "${supplier.name}" to Archive?`
         );
 
 
     if (!confirmed) {
 
         return;
-
     }
 
 
     try {
+
+        // ==================================
+        // SUPPLIER REFERENCE
+        // ==================================
 
         const supplierRef =
             doc(
@@ -894,24 +906,91 @@ async function deleteSupplier(id) {
             );
 
 
+        // ==================================
+        // CREATE ARCHIVE DOCUMENT
+        // ==================================
+
+        const archiveRef =
+            doc(
+                collection(
+                    db,
+                    "archive"
+                )
+            );
+
+
+        // Remove temporary "id" property
+        // before saving the original data
+        const {
+            id: ignoredId,
+            ...originalData
+        } = supplier;
+
+
+        // ==================================
+        // SAVE TO ARCHIVE
+        // ==================================
+
+        await setDoc(
+            archiveRef,
+            {
+
+                type:
+                    "Supplier",
+
+                originalCollection:
+                    "suppliers",
+
+                originalId:
+                    id,
+
+                originalData:
+                    originalData,
+
+                deletedBy:
+                    currentUser?.uid || "",
+
+                deletedByEmail:
+                    currentUser?.email || "",
+
+                deletedAt:
+                    serverTimestamp()
+
+            }
+        );
+
+
+        // ==================================
+        // DELETE ORIGINAL SUPPLIER
+        // ==================================
+
         await deleteDoc(
             supplierRef
         );
 
 
+        // ==================================
+        // RELOAD SUPPLIERS
+        // ==================================
+
         await loadSuppliers();
+
+
+        alert(
+            "Supplier moved to Archive successfully!"
+        );
 
 
     } catch (error) {
 
         console.error(
-            "DELETE SUPPLIER ERROR:",
+            "ARCHIVE SUPPLIER ERROR:",
             error
         );
 
 
         alert(
-            "Unable to delete supplier: " +
+            "Unable to archive supplier: " +
             error.message
         );
 
