@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Archive - Deja Brew</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ==========================================
+           ARCHIVE PAGE
+        ========================================== */
+
+        .archive-page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .archive-page-header h1 {
+            margin: 0;
+            color: #4d4039;
+        }
+
+        .archive-page-header p {
+            margin: 5px 0 0;
+            color: #8b817b;
+            font-size: 14px;
+        }
+
+        .archive-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .archive-search {
+            width: 300px;
+            padding: 12px 14px;
+            border: 1px solid #ddd6d1;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+            background: white;
+        }
+
+        .archive-search:focus {
+            border-color: #6f4e37;
+            box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.1);
+        }
+
+        .archive-filter {
+            padding: 12px 14px;
+            border: 1px solid #ddd6d1;
+            border-radius: 9px;
+            outline: none;
+            background: white;
+            color: #4d4039;
+            font-size: 14px;
+        }
+
+        .archive-card {
+            background: white;
+            border: 1px solid #e8e2dc;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        .archive-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .archive-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        .archive-table th {
+            text-align: left;
+            padding: 14px 16px;
+            background: #f8f5f2;
+            color: #6f625b;
+            font-size: 12px;
+            font-weight: 600;
+            border-bottom: 1px solid #e8e2dc;
+        }
+
+        .archive-table td {
+            padding: 15px 16px;
+            border-bottom: 1px solid #eee9e5;
+            color: #4d4039;
+            font-size: 13px;
+        }
+
+        .archive-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .archive-table tr:hover {
+            background: #fcfaf8;
+        }
+
+        .archive-type {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #f0e8e1;
+            color: #6f4e37;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .archive-name {
+            font-weight: 600;
+            color: #4d4039;
+        }
+
+        .archive-details {
+            color: #8b817b;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+
+        .archive-actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .restore-btn,
+        .permanent-delete-btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .restore-btn {
+            background: #e8f3e8;
+            color: #3f7043;
+        }
+
+        .restore-btn:hover {
+            background: #d8ead8;
+        }
+
+        .permanent-delete-btn {
+            background: #f8e2e2;
+            color: #a33a3a;
+        }
+
+        .permanent-delete-btn:hover {
+            background: #f1d0d0;
+        }
+
+        .staff-notice {
+            display: none;
+            background: #f8f5f2;
+            border: 1px solid #e8e2dc;
+            border-radius: 10px;
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            color: #6f625b;
+            font-size: 13px;
+        }
+
+        .empty-archive {
+            text-align: center;
+            padding: 50px 20px !important;
+            color: #8b817b !important;
+        }
+
+        .archive-count {
+            color: #8b817b;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+
+            .archive-page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .archive-toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .archive-search {
+                width: 100%;
+            }
+
+            .archive-filter {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ==========================================
+         SIDEBAR
+    ========================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <!-- LOGO -->
+
+        <div class="brand">
+
+            <div class="brand-icon">
+
+                <img
+                    src="images/deja-brew-logo.jpeg"
+                    alt="Deja Brew Logo"
+                    class="brand-logo"
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="navigation">
+
+            <a href="dashboard.html" class="nav-item">
+                <span>📊</span>
+                <span>Dashboard</span>
+            </a>
+
+            <a href="products.html" class="nav-item">
+                <span>☕</span>
+                <span>Products</span>
+            </a>
+
+            <a href="categories.html" class="nav-item">
+                <span>🏷️</span>
+                <span>Categories</span>
+            </a>
+
+            <a href="stock-in.html" class="nav-item">
+                <span>📥</span>
+                <span>Stock In</span>
+            </a>
+
+            <a href="stock-out.html" class="nav-item">
+                <span>📤</span>
+                <span>Stock Out</span>
+            </a>
+
+            <a href="suppliers.html" class="nav-item">
+                <span>🚚</span>
+                <span>Suppliers</span>
+            </a>
+
+            <a href="reports.html" class="nav-item">
+                <span>📈</span>
+                <span>Reports</span>
+            </a>
+
+            <a href="archive.html" class="nav-item active">
+                <span>🗄️</span>
+                <span>Archive</span>
+            </a>
+
+        </nav>
+
+
+        <!-- SIDEBAR BOTTOM -->
+
+        <div class="sidebar-bottom">
+
+            <button
+                type="button"
+                class="logout-btn"
+                id="logoutBtn"
+            >
+                <span>🚪</span>
+                <span>Logout</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- SIDEBAR OVERLAY -->
+
+    <div
+        class="sidebar-overlay"
+        id="sidebarOverlay"
+    ></div>
+
+
+    <!-- ==========================================
+         MAIN CONTENT
+    ========================================== -->
+
+    <main class="main-content">
+
+        <!-- TOPBAR -->
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <button
+                    type="button"
+                    class="menu-btn"
+                    id="menuBtn"
+                >
+                    ☰
+                </button>
+
+                <div>
+
+                    <h2 class="topbar-title">
+                        Archive
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user-avatar">
+                    👤
+                </div>
+
+                <div>
+
+                    <strong id="userName">
+                        User
+                    </strong>
+
+                    <span id="userRole">
+                        Staff
+                    </span>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- ======================================
+             CONTENT
+        ====================================== -->
+
+        <section class="dashboard-content">
+
+            <div class="archive-page-header">
+
+                <div>
+
+                    <h1>
+                        Archived Records
+                    </h1>
+
+                    <p>
+                        View and manage deleted products,
+                        categories, and suppliers.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- STAFF NOTICE -->
+
+            <div
+                class="staff-notice"
+                id="staffNotice"
+            >
+                You are viewing the Archive as Staff.
+                Only Admin users can restore or permanently
+                delete archived records.
+            </div>
+
+
+            <!-- TOOLBAR -->
+
+            <div class="archive-toolbar">
+
+                <input
+                    type="text"
+                    id="searchArchive"
+                    class="archive-search"
+                    placeholder="Search archived records..."
+                >
+
+                <select
+                    id="archiveFilter"
+                    class="archive-filter"
+                >
+
+                    <option value="all">
+                        All Records
+                    </option>
+
+                    <option value="Product">
+                        Products
+                    </option>
+
+                    <option value="Category">
+                        Categories
+                    </option>
+
+                    <option value="Supplier">
+                        Suppliers
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ARCHIVE CARD -->
+
+            <div class="archive-card">
+
+                <div style="
+                    padding: 18px 20px;
+                    border-bottom: 1px solid #e8e2dc;
+                ">
+
+                    <strong style="color:#4d4039;">
+                        Archived Records
+                    </strong>
+
+                    <div
+                        class="archive-count"
+                        id="archiveCount"
+                    >
+                        0 records
+                    </div>
+
+                </div>
+
+
+                <div class="archive-table-wrapper">
+
+                    <table class="archive-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    TYPE
+                                </th>
+
+                                <th>
+                                    NAME
+                                </th>
+
+                                <th>
+                                    ORIGINAL ID
+                                </th>
+
+                                <th>
+                                    DELETED BY
+                                </th>
+
+                                <th>
+                                    DATE DELETED
+                                </th>
+
+                                <th>
+                                    ACTIONS
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="archiveTable">
+
+                            <tr>
+
+                                <td
+                                    colspan="6"
+                                    class="empty-archive"
+                                >
+                                    Loading archive...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script
+        type="module"
+        src="js/archive.js"
+    ></script>
+
+</body>
+
+</html>
