@@ -97,20 +97,23 @@ onAuthStateChanged(auth, async (user) => {
             "login.html";
 
         return;
-
     }
 
 
     currentUser = user;
 
 
+    // Show logged-in user
+
     userName.textContent =
         user.displayName || user.email;
 
 
-    try {
+    // ======================================
+    // GET USER ROLE
+    // ======================================
 
-        // Get only the logged-in user's document
+    try {
 
         const userRef =
             doc(
@@ -140,7 +143,6 @@ onAuthStateChanged(auth, async (user) => {
 
             currentRole =
                 "staff";
-
         }
 
 
@@ -151,7 +153,7 @@ onAuthStateChanged(auth, async (user) => {
     } catch (error) {
 
         console.error(
-            "User role error:",
+            "USER ROLE ERROR:",
             error
         );
 
@@ -161,11 +163,12 @@ onAuthStateChanged(auth, async (user) => {
 
         userRole.textContent =
             "Staff";
-
     }
 
 
-    // Load report data
+    // ======================================
+    // LOAD REPORT
+    // ======================================
 
     await loadReports();
 
@@ -180,9 +183,25 @@ async function loadReports() {
 
     try {
 
-        // --------------------------------------
+        // ==================================
+        // SHOW LOADING
+        // ==================================
+
+        reportTable.innerHTML = `
+            <tr>
+                <td
+                    colspan="7"
+                    class="empty-table"
+                >
+                    Loading report...
+                </td>
+            </tr>
+        `;
+
+
+        // ==================================
         // LOAD PRODUCTS
-        // --------------------------------------
+        // ==================================
 
         const productSnapshot =
             await getDocs(
@@ -212,9 +231,9 @@ async function loadReports() {
         );
 
 
-        // --------------------------------------
+        // ==================================
         // LOAD STOCK IN
-        // --------------------------------------
+        // ==================================
 
         const stockInSnapshot =
             await getDocs(
@@ -247,9 +266,9 @@ async function loadReports() {
         );
 
 
-        // --------------------------------------
+        // ==================================
         // LOAD STOCK OUT
-        // --------------------------------------
+        // ==================================
 
         const stockOutSnapshot =
             await getDocs(
@@ -282,7 +301,9 @@ async function loadReports() {
         );
 
 
-        // Combine activities
+        // ==================================
+        // COMBINE ACTIVITIES
+        // ==================================
 
         activities = [
 
@@ -293,7 +314,9 @@ async function loadReports() {
         ];
 
 
-        // Sort newest first
+        // ==================================
+        // SORT NEWEST FIRST
+        // ==================================
 
         activities.sort(
             (a, b) => {
@@ -307,7 +330,9 @@ async function loadReports() {
         );
 
 
-        // Update summary
+        // ==================================
+        // UPDATE SUMMARY
+        // ==================================
 
         updateSummary(
             stockInRecords,
@@ -315,7 +340,9 @@ async function loadReports() {
         );
 
 
-        // Display activity
+        // ==================================
+        // DISPLAY ACTIVITIES
+        // ==================================
 
         displayActivities(
             activities
@@ -341,6 +368,9 @@ async function loadReports() {
             </tr>
         `;
 
+        activityCount.textContent =
+            "0 activities";
+
     }
 
 }
@@ -355,17 +385,17 @@ function updateSummary(
     stockOutRecords
 ) {
 
-    // --------------------------------------
+    // ======================================
     // TOTAL PRODUCTS
-    // --------------------------------------
+    // ======================================
 
     totalProducts.textContent =
         products.length;
 
 
-    // --------------------------------------
+    // ======================================
     // TOTAL CURRENT STOCK
-    // --------------------------------------
+    // ======================================
 
     let stockTotal = 0;
 
@@ -423,9 +453,9 @@ function updateSummary(
         outOfStockCount;
 
 
-    // --------------------------------------
-    // STOCK IN TOTAL
-    // --------------------------------------
+    // ======================================
+    // TOTAL STOCK IN
+    // ======================================
 
     let stockInTotal = 0;
 
@@ -446,9 +476,9 @@ function updateSummary(
         stockInTotal;
 
 
-    // --------------------------------------
-    // STOCK OUT TOTAL
-    // --------------------------------------
+    // ======================================
+    // TOTAL STOCK OUT
+    // ======================================
 
     let stockOutTotal = 0;
 
@@ -506,7 +536,6 @@ function displayActivities(
         `;
 
         return;
-
     }
 
 
@@ -519,9 +548,9 @@ function displayActivities(
                 );
 
 
-            // ----------------------------------
+            // ==================================
             // DATE
-            // ----------------------------------
+            // ==================================
 
             const date =
                 getRecordDate(record);
@@ -545,9 +574,9 @@ function displayActivities(
                     : "—";
 
 
-            // ----------------------------------
+            // ==================================
             // TYPE
-            // ----------------------------------
+            // ==================================
 
             const isStockIn =
                 record.type ===
@@ -566,13 +595,15 @@ function displayActivities(
                     : "status-low";
 
 
-            // ----------------------------------
+            // ==================================
             // STOCK VALUES
-            // ----------------------------------
+            // ==================================
 
-            let previousStock = "—";
+            let previousStock =
+                "—";
 
-            let newStock = "—";
+            let newStock =
+                "—";
 
 
             if (
@@ -581,10 +612,14 @@ function displayActivities(
             ) {
 
                 previousStock =
-                    record.previousStock;
+                    Number(
+                        record.previousStock
+                    );
 
             }
 
+
+            // Stock In stores newStock
 
             if (
                 record.newStock !==
@@ -592,13 +627,31 @@ function displayActivities(
             ) {
 
                 newStock =
-                    record.newStock;
+                    Number(
+                        record.newStock
+                    );
 
             }
 
 
-            // Stock In uses newStock
-            // or calculates it if necessary
+            // Stock Out stores remainingStock
+
+            if (
+                !isStockIn &&
+                record.remainingStock !==
+                undefined
+            ) {
+
+                newStock =
+                    Number(
+                        record.remainingStock
+                    );
+
+            }
+
+
+            // Calculate Stock In new stock
+            // if missing
 
             if (
                 isStockIn &&
@@ -619,16 +672,30 @@ function displayActivities(
             }
 
 
-            // ----------------------------------
+            // ==================================
             // USER
-            // ----------------------------------
+            // ==================================
 
             const user =
                 record.receivedByName ||
                 record.receivedBy ||
                 record.userEmail ||
+                record.deletedByEmail ||
                 "—";
 
+
+            // ==================================
+            // PRODUCT
+            // ==================================
+
+            const productName =
+                record.productName ||
+                "Unknown Product";
+
+
+            // ==================================
+            // CREATE ROW
+            // ==================================
 
             row.innerHTML = `
 
@@ -641,8 +708,7 @@ function displayActivities(
 
                     <strong>
                         ${escapeHTML(
-                            record.productName ||
-                            "Unknown Product"
+                            productName
                         )}
                     </strong>
 
@@ -718,9 +784,9 @@ function filterActivities() {
         activities.filter(
             (record) => {
 
-                // ------------------------------
+                // ==================================
                 // TYPE FILTER
-                // ------------------------------
+                // ==================================
 
                 if (
                     filter !== "all" &&
@@ -732,9 +798,9 @@ function filterActivities() {
                 }
 
 
-                // ------------------------------
+                // ==================================
                 // SEARCH
-                // ------------------------------
+                // ==================================
 
                 if (!search) {
 
@@ -761,6 +827,14 @@ function filterActivities() {
                     String(
                         record.userEmail ||
                         record.receivedBy ||
+                        record.receivedByName ||
+                        ""
+                    ).toLowerCase();
+
+
+                const reason =
+                    String(
+                        record.reason ||
                         ""
                     ).toLowerCase();
 
@@ -783,6 +857,12 @@ function filterActivities() {
                         search
                     )
 
+                    ||
+
+                    reason.includes(
+                        search
+                    )
+
                 );
 
             }
@@ -796,11 +876,19 @@ function filterActivities() {
 }
 
 
+// ==========================================
+// SEARCH EVENT
+// ==========================================
+
 searchReport.addEventListener(
     "input",
     filterActivities
 );
 
+
+// ==========================================
+// FILTER EVENT
+// ==========================================
 
 reportFilter.addEventListener(
     "change",
@@ -831,7 +919,6 @@ function getRecordDate(record) {
     if (!record) {
 
         return null;
-
     }
 
 
@@ -866,6 +953,64 @@ function getRecordDate(record) {
     ) {
 
         return record.updatedAt.toDate();
+
+    }
+
+
+    // JavaScript Date
+
+    if (
+        record.date instanceof Date
+    ) {
+
+        return record.date;
+
+    }
+
+
+    if (
+        record.createdAt instanceof Date
+    ) {
+
+        return record.createdAt;
+
+    }
+
+
+    // String / number date
+
+    if (record.date) {
+
+        const parsedDate =
+            new Date(record.date);
+
+        if (
+            !isNaN(
+                parsedDate.getTime()
+            )
+        ) {
+
+            return parsedDate;
+
+        }
+
+    }
+
+
+    if (record.createdAt) {
+
+        const parsedDate =
+            new Date(record.createdAt);
+
+        if (
+            !isNaN(
+                parsedDate.getTime()
+            )
+        ) {
+
+            return parsedDate;
+
+        }
 
     }
 
