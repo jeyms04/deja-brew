@@ -6,6 +6,7 @@ import {
     getDoc,
     getDocs,
     serverTimestamp,
+    setDoc,
     updateDoc
 } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-firestore.js";
 
